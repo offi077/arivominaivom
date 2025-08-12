@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import '@fontsource/noto-sans-tamil';
 @import "tailwindcss";
 
 :root {
@@ -22,5 +26,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, Noto Sans Tamil, sans-serif;
 }
