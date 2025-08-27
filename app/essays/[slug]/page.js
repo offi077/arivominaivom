@@ -1,8 +1,10 @@
-import { useRouter } from 'next/router';
+"use client";
+
+import { useParams } from "next/navigation"; // Use next/navigation instead of next/router
+import Link from "next/link";
 
 export default function EssayPage() {
-  const router = useRouter();
-  const { slug } = router.query;
+  const { slug } = useParams(); // Get slug from URL
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -11,7 +13,9 @@ export default function EssayPage() {
         <p>Content for essay with slug: {slug}</p>
         {/* Fetch and display essay content based on slug (e.g., from API or database) */}
       </div>
-      <a href="/" className="mt-6 inline-block text-blue-600 hover:underline">Back to Home</a>
+      <Link href="/" className="mt-6 inline-block text-blue-600 hover:underline">
+        Back to Home
+      </Link>
     </div>
   );
 }

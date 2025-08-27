@@ -24,7 +24,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/about-author"
+                  href="/about"
                   className="hover:text-[#bfa14a] hover:pl-1 transition-all duration-200"
                 >
                   About the Author

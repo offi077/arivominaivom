@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function SpaceExplorationPage() {
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -7,7 +8,9 @@ export default function SpaceExplorationPage() {
         <p>This essay covers the history, current advancements, and future prospects of space exploration. It discusses missions to Mars, commercial space travel, and the search for extraterrestrial life.</p>
         {/* Add full essay content here */}
       </div>
-      <a href="/" className="mt-6 inline-block text-blue-600 hover:underline">Back to Home</a>
+      <Link href="/" className="mt-6 inline-block text-blue-600 hover:underline">
+        Back to Home
+      </Link>
     </div>
   );
 }

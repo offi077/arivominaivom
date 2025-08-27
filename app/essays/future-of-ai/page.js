@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function FutureOfAIPage() {
   // Sample essay content (replace with actual 1000-line essay)
   const essayContent = {
@@ -54,9 +55,9 @@ export default function FutureOfAIPage() {
           </div>
         ))}
       </div>
-      <a href="/" className="mt-6 inline-block text-blue-600 hover:underline">
+      <Link href="/" className="mt-6 inline-block text-blue-600 hover:underline">
         Back to Home
-      </a>
+      </Link>
     </div>
   );
 }

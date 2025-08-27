@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function ClimateChangeSolutionsPage() {
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -7,7 +9,9 @@ export default function ClimateChangeSolutionsPage() {
         <p>This essay explores sustainable technologies, policy recommendations, and community-driven initiatives to combat climate change. It highlights practical solutions and their global impact.</p>
         {/* Add full essay content here */}
       </div>
-      <a href="/" className="mt-6 inline-block text-blue-600 hover:underline">Back to Home</a>
+      <Link href="/" className="mt-6 inline-block text-blue-600 hover:underline">
+        Back to Home
+      </Link>
     </div>
   );
 }
