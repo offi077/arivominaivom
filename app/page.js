@@ -1,6 +1,7 @@
 import Banner from "./components/Banner";
 import Essaymain from "./components/Essaymain";
 import Smallbooks from "./components/Smallbooks";
+import EssayCarousel from "./components/EssayCarousel";
 
 export default function Page() {
   return (
@@ -12,7 +13,7 @@ export default function Page() {
         <Essaymain />
       </div>
       <div className="w-full">
-        
+        <EssayCarousel />
       </div>
       <main className="bg-white p-6 rounded-xl shadow-sm">
         <Smallbooks />
