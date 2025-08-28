@@ -1,7 +1,7 @@
 export default function Page() {
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-10">
-      <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6">
+      <div className="max-w-5xl mx-auto bg-gradient-to-r from-[#fdf8f3] via-[#f8e9c6] to-[#fdf8f3] border border-[#e5d3a5] shadow-lg rounded-lg p-6">
         {/* Title */}
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           About the Author

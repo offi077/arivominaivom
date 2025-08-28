@@ -23,20 +23,27 @@ export default function Essaymain() {
       coverImage: "/essays/wahhn/cover.jpg",
       imageCount: 27,
     },
+    {
+      id: "essay-3",
+      title: "மூன்றாவது கட்டுரை",
+      description: "மிகுந்த பயனுள்ள அறிவாற்றல் கட்டுரை.",
+      coverImage: "/essays/essay-3/cover.jpg",
+      imageCount: 15,
+    },
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const autoScrollRef = useRef(null);
 
-  // Auto-scroll logic
+  // Auto-scroll
   useEffect(() => {
     const startAutoScroll = () => {
       autoScrollRef.current = setInterval(() => {
         if (!isPaused) {
-          setCurrentSlide((prev) => (prev + 1) % essays.length);
+          setCurrentSlide((prev) => (prev + 1) % Math.ceil(essays.length / 2));
         }
-      }, 4000); // 4 seconds per slide
+      }, 5000);
     };
 
     startAutoScroll();
@@ -44,18 +51,18 @@ export default function Essaymain() {
   }, [isPaused, essays.length]);
 
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + essays.length) % essays.length);
-    setIsPaused(true); // Pause auto-scroll on manual interaction
+    setCurrentSlide((prev) => (prev - 1 + Math.ceil(essays.length / 2)) % Math.ceil(essays.length / 2));
+    setIsPaused(true);
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % essays.length);
-    setIsPaused(true); // Pause auto-scroll on manual interaction
+    setCurrentSlide((prev) => (prev + 1) % Math.ceil(essays.length / 2));
+    setIsPaused(true);
   };
 
   const handleDotClick = (index) => {
     setCurrentSlide(index);
-    setIsPaused(true); // Pause auto-scroll on manual interaction
+    setIsPaused(true);
   };
 
   return (
@@ -72,62 +79,59 @@ export default function Essaymain() {
         }
         .carousel-track {
           display: flex;
-          transition: transform 0.5s ease-in-out;
+          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
           transform: translateX(-${currentSlide * 100}%);
         }
         .carousel-slide {
-          flex: 0 0 100%;
-          min-width: 100%;
+          flex: 0 0 50%; /* 👈 Two cards per view */
           display: flex;
           justify-content: center;
+          padding: 10px;
         }
         .nav-button {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          background: rgba(0, 0, 0, 0.5);
-          color: white;
-          width: 40px;
-          height: 40px;
+          background: rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(6px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          color: #fff;
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background 0.2s;
+          transition: all 0.3s;
         }
         .nav-button:hover {
-          background: #B76E79;
-        }
-        .nav-button:disabled {
-          background: #6b7280;
-          cursor: not-allowed;
+          background: linear-gradient(135deg, #d8b75d, #bfa14a);
+          transform: translateY(-50%) scale(1.1);
         }
         .dots-container {
           position: absolute;
-          bottom: 20px;
+          bottom: 16px;
           left: 50%;
           transform: translateX(-50%);
           display: flex;
-          gap: 10px;
+          gap: 8px;
         }
         .dot {
-          width: 12px;
-          height: 12px;
+          width: 8px;
+          height: 8px;
           background: #d1d5db;
-          border-radius: 50%;
+          border-radius: 50px;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: all 0.3s;
         }
         .dot.active {
-          background: #2563eb;
-        }
-        .dot:hover {
-          background: #1e40af;
+          width: 20px;
+          background: #bfa14a;
         }
       `}</style>
 
       {/* Section Title */}
-      <h2 className="text-4xl font-bold text-center text-gray-800 mb-6 tracking-tight">
+      <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-6 tracking-tight">
         📚 ஆய்வு கட்டுரைகள்
       </h2>
       <p className="text-lg text-gray-600 text-center max-w-3xl mx-auto mb-12 leading-relaxed">
@@ -140,33 +144,28 @@ export default function Essaymain() {
       <div className="carousel-container">
         <div className="carousel-track">
           {essays.map((essay, index) => (
-            <div
-              key={essay.id}
-              className="carousel-slide"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-gradient-to-r from-[#fdf8f3] via-[#f8e9c6] to-[#fdf8f3] border border-[#e5d3a5] rounded-xl shadow-md p-6 md:p-8 transition-all duration-300 hover:shadow-2xl">
+            <div key={essay.id} className="carousel-slide">
+              <div className="flex flex-col items-center bg-gradient-to-r from-[#fdf8f3] via-[#f8e9c6] to-[#fdf8f3] border border-[#e5d3a5] rounded-xl shadow-md p-5 transition-all duration-500 hover:shadow-2xl hover:scale-[1.02]">
                 {/* Image */}
-                <div className="flex justify-center">
-                  <Link href={`/Essay/${essay.id}`} aria-label={`Read ${essay.title}`}>
-                    <Image
-                      src={essay.coverImage}
-                      alt={`${essay.title} cover image`}
-                      className="rounded-xl shadow-lg object-cover hover:scale-[1.03] transition-transform duration-300"
-                      width={350}
-                      height={450}
-                      priority={index === 0}
-                    />
-                  </Link>
-                </div>
+                <Link href={`/Essay/${essay.id}`} aria-label={`Read ${essay.title}`}>
+                  <Image
+                    src={essay.coverImage}
+                    alt={`${essay.title} cover image`}
+                    className="rounded-lg shadow-md object-cover hover:scale-[1.05] transition-transform duration-500"
+                    width={250}   // 👈 Reduced size
+                    height={320}  // 👈 Reduced size
+                    priority={index === 0}
+                  />
+                </Link>
 
                 {/* Text */}
-                <div className="flex flex-col justify-center text-center md:text-left">
+                <div className="mt-4 text-center">
                   <Link href={`/Essay/${essay.id}`} aria-label={`Read ${essay.title}`}>
-                    <h3 className="text-2xl font-semibold text-gray-800 mb-3 hover:text-yellow-600 transition-colors duration-200">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 hover:text-yellow-600 transition-colors duration-300">
                       {essay.title}
                     </h3>
                   </Link>
-                  <p className="text-gray-600 text-base leading-relaxed italic">
+                  <p className="text-gray-700 text-sm leading-relaxed italic">
                     {essay.description}
                   </p>
                 </div>
@@ -178,26 +177,22 @@ export default function Essaymain() {
         {/* Navigation Buttons */}
         <button
           onClick={handlePrevSlide}
-          disabled={currentSlide === 0}
-          className="nav-button left-1"
+          className="nav-button left-3"
           aria-label="Previous Slide"
         >
-          
           <FaChevronLeft size={20} />
         </button>
         <button
           onClick={handleNextSlide}
-          disabled={currentSlide === essays.length - 1}
-          className="nav-button right-1"
+          className="nav-button right-3"
           aria-label="Next Slide"
         >
-          
           <FaChevronRight size={20} />
         </button>
 
         {/* Navigation Dots */}
         <div className="dots-container">
-          {essays.map((_, index) => (
+          {Array.from({ length: Math.ceil(essays.length / 2) }).map((_, index) => (
             <div
               key={index}
               className={`dot ${index === currentSlide ? "active" : ""}`}
