@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-// Essay metadata (ideally, this should be fetched from a shared source or API)
+// Essay metadata
 const essays = [
   {
     id: "the-key-of-evils",
@@ -26,52 +26,40 @@ export default function EssayReader() {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
-  // Find the essay by slug
   const essay = essays.find((e) => e.id === slug);
   const totalPages = essay ? essay.imageCount : 20;
   const essayTitle = essay ? essay.title : "Essay";
 
-  // Generate image path
   const imagePath = `/essays/${slug}/essay_${slug}_page${currentPage}.jpg`;
 
-  // Handle page navigation
+  // Navigation
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setIsLoading(true);
-      setCurrentPage(currentPage - 1);
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setIsLoading(true);
-      setCurrentPage(currentPage + 1);
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
-  // Handle touch events for swipe
-  const handleTouchStart = (e) => {
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
+  // Swipe
+  const handleTouchStart = (e) => setTouchStart(e.targetTouches[0].clientX);
+  const handleTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe) handleNextPage();
-    if (isRightSwipe) handlePrevPage();
-
+    if (distance > 50) handleNextPage(); // left swipe
+    if (distance < -50) handlePrevPage(); // right swipe
     setTouchStart(null);
     setTouchEnd(null);
   };
 
-  // Handle keyboard navigation
+  // Keyboard
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "ArrowLeft") handlePrevPage();
@@ -81,47 +69,38 @@ export default function EssayReader() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentPage]);
 
-  // Handle image load
-  const handleImageLoad = () => {
-    setIsLoading(false);
-  };
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative">
-      {/* Title Bar */}
-      <div className="w-full shadow-md py-4 px-6 top-13 z-10">
-        <h2 className="text-xl md:text-2xl font-bold text-center text-gray-800">
-          {essayTitle} - Page {currentPage}/{totalPages}
+    <div className="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-br from-gray-50 to-gray-200">
+      {/* Floating Title Bar */}
+      <div className="sticky top-0 w-full backdrop-blur-md bg-gradient-to-r from-[#fdf8f3] via-[#f8e9c6] to-[#fdf8f3] border border-[#e5d3a5] shadow-md py-3 px-4 z-20">
+        <h2 className="text-lg md:text-2xl font-bold text-center text-gray-800">
+          {essayTitle}
         </h2>
       </div>
 
-      {/* Image Carousel */}
+      {/* Image Container */}
       <div
-        className="w-full max-w-[210mm] h-[297mm] relative overflow-hidden"
+        className="w-full flex justify-center py-2 px-2"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Loading Overlay */}
-        {isLoading && (
-          <div className="absolute inset-0 bg-gray-200 flex items-center justify-center z-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        )}
+        <div className="relative w-full max-w-4xl aspect-[210/297] bg-gray-100 rounded-xl shadow-lg overflow-hidden">
+          {/* Skeleton Loader */}
+          {isLoading && (
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 z-10" />
+          )}
 
-        {/* Image */}
-        <div
-          className={`w-full h-full transition-opacity duration-300 ${
-            isLoading ? "opacity-0" : "opacity-100"
-          }`}
-        >
           <Image
             src={imagePath}
             alt={`Page ${currentPage}`}
-            layout="fill"
-            objectFit="contain"
+            fill
+            sizes="(max-width: 768px) 100vw, 60vw"
+            className={`object-contain transition-opacity duration-500 ${
+              isLoading ? "opacity-0" : "opacity-100"
+            }`}
             priority={currentPage === 1}
-            onLoadingComplete={handleImageLoad}
+            onLoadingComplete={() => setIsLoading(false)}
             onError={() => {
               setIsLoading(false);
               alert("Image not found!");
@@ -131,33 +110,27 @@ export default function EssayReader() {
       </div>
 
       {/* Navigation Controls */}
-      <div className="fixed bottom-4 flex items-center space-x-4 z-10">
+      <div className="fixed bottom-6 flex items-center space-x-4 z-30">
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          className={`p-3 rounded-full bg-blue-600 text-white transition-all ${
-            currentPage === 1
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:bg-blue-700"
-          }`}
+          className={`p-3 md:p-4 rounded-full shadow-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition disabled:opacity-40 disabled:cursor-not-allowed`}
           aria-label="Previous Page"
         >
-          <FaArrowLeft size={24} />
+          <FaArrowLeft size={22} />
         </button>
-        <span className="text-lg font-semibold bg-white px-4 py-2 rounded shadow">
+
+        <span className="text-sm md:text-lg font-semibold bg-white px-4 py-2 rounded-full shadow-md border border-gray-200">
           {currentPage}/{totalPages}
         </span>
+
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className={`p-3 rounded-full bg-blue-600 text-white transition-all ${
-            currentPage === totalPages
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:bg-blue-700"
-          }`}
+          className={`p-3 md:p-4 rounded-full shadow-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 transition disabled:opacity-40 disabled:cursor-not-allowed`}
           aria-label="Next Page"
         >
-          <FaArrowRight size={24} />
+          <FaArrowRight size={22} />
         </button>
       </div>
     </div>
